@@ -14,6 +14,8 @@ CURATE_MENU_NAME = "Data Curation"
 WEBSITE_ADMIN_COLOR = "yellow"
 # black, black-light, blue, blue-light, green, green-light, purple, purple-light, red, red-light, yellow, yellow-light
 
+CAN_ANONYMOUS_ACCESS_PUBLIC_DOCUMENT = True
+
 #DATA_SOURCES_EXPLORE_APPS = [ "core_explore_federated_search_app", "core_explore_oaipmh_app", ]
 
 # Lists in data not stored if number of elements is over the limit (e.g. 100)
