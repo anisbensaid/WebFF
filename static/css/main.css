@@ -2349,7 +2349,7 @@
 
 	#nav {
 		cursor: default;
-		background-color: #925520;
+		/*background-color: #925520;*/
 		background-image: url("static/core_main_app/img/webff-img.jpeg");
 		padding: 0;
 		text-align: right;
