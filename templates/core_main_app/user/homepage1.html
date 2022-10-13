@@ -1,0 +1,659 @@
+<html lang="en"><head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="author" content="NIST">
+    <meta name="description" content="The NIST Materials Data Curation System (MDCS) provides a means for capturing, sharing, and transforming materials data into a structured format that is XML based amenable to transformation to other formats. The data are organized using user-selected templates encoded in XML Schema. These templates are used to create data entry forms. The documents are saved in a non-relational (NoSQL) database, namely MongoDB. The data can be searched and retrieved by a template-driven web-based form or by a RESTful API call. The system also enables the interconnection of MDCS repositories for federated searches.">
+    <meta name="generator" content="Django 1.11.20">
+    <meta name="keywords" content="MDCS, harvest, share, modular, nist, National Institute of Standards and Technology, federated searches, form, REST api, interconnection">
+
+    <title>MDCS</title>
+
+    
+        <link rel="stylesheet" href="/static/core_main_app/libs/bootstrap/4.5.2/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/static/core_main_app/libs/font-awesome/5.13.0/css/all.min.css">
+        <link rel="stylesheet" href="/static/core_main_app/libs/jquery-ui/1.12.1/jquery-ui.css">
+        <link rel="stylesheet" href="/static/core_main_app/libs/jquery-ui/1.12.1/jquery-ui.structure.css">
+        <link rel="stylesheet" href="/static/core_main_app/libs/jquery-ui/1.12.1/jquery-ui.theme.css">
+        <link rel="stylesheet" href="/static/core_main_app/common/css/word-wrap.css">
+        <link rel="stylesheet" href="/static/core_main_app/common/css/table.css">
+        <link rel="stylesheet" href="/static/core_main_app/common/css/buttons.css">
+        <link rel="stylesheet" href="/static/core_main_app/common/css/fields.css">
+        <link rel="stylesheet" href="/static/core_main_app/common/css/loading-spinner.css">
+
+        
+        <link rel="stylesheet" href="https://pages.nist.gov/nist-header-footer/css/nist-combined.css">
+        
+    
+    
+    <link rel="icon" href="/static/img/favicon.png" sizes="16x16" type="image/png">
+
+    <!--[if lte IE 8]><script src="/static/ie/html5shiv.js"></script><![endif]-->
+    <link rel="stylesheet" href="/static/css/main.css">
+    <link rel="stylesheet" href="/static/css/menu.css">
+    <link rel="stylesheet" href="/static/css/extra.css">
+    <link rel="stylesheet" href="/static/css/btn_custom.css">
+
+    <!--[if lte IE 9]><link rel="stylesheet" href="/static/ie/ie9.css" /><![endif]-->
+    <!--[if lte IE 8]><link rel="stylesheet" href="/static/ie/ie8.css" /><![endif]-->
+
+    
+    
+        <link rel="stylesheet" href="/static/core_main_app/css/homepage.css">
+    
+
+    <style>
+      html,
+      body {
+        height: 100%;
+      }
+      .wrapper {
+        height: 100%;
+        font-family: Helvetica, sans-serif;
+        line-height: 1.5;
+        word-spacing: 2px;
+        letter-spacing: 0.5px;
+      }
+      .fixed {
+        background-attachment: fixed;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center center;
+        height: 100%;
+        width: 100%;
+        color: #eeeeee;
+        text-align: center;
+        display: table;
+      }
+      .fixed h2 {
+        display: table-cell;
+        vertical-align: middle;
+      }
+    
+      h3 {
+        text-align: center;
+      }
+    
+      .scroll {
+        background-color: #eeeeee;
+        padding: 10px 70px;
+        color: #666666;
+      }
+      .one {
+        background-image: url("/static/core_main_app/img/webff-img.jpeg")
+      }
+      .two {
+        background-image: url("/static/core_main_app/img/webff-img.jpeg")
+      }
+      .three {
+        background-image: url("/static/core_main_app/img/webff-img.jpeg")
+      }
+    </style>
+    
+<style type="text/css" id="notify-bootstrap">.notifyjs-bootstrap-base {
+    font-weight: bold;
+    padding: 8px 15px 8px 14px;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    background-color: #fcf8e3;
+    border: 1px solid #fbeed5;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    white-space: nowrap;
+    padding-left: 25px;
+    background-repeat: no-repeat;
+    background-position: 3px 7px;
+}
+.notifyjs-bootstrap-error {
+    color: #B94A48;
+    background-color: #F2DEDE;
+    border-color: #EED3D7;
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAtRJREFUeNqkVc1u00AQHq+dOD+0poIQfkIjalW0SEGqRMuRnHos3DjwAH0ArlyQeANOOSMeAA5VjyBxKBQhgSpVUKKQNGloFdw4cWw2jtfMOna6JOUArDTazXi/b3dm55socPqQhFka++aHBsI8GsopRJERNFlY88FCEk9Yiwf8RhgRyaHFQpPHCDmZG5oX2ui2yilkcTT1AcDsbYC1NMAyOi7zTX2Agx7A9luAl88BauiiQ/cJaZQfIpAlngDcvZZMrl8vFPK5+XktrWlx3/ehZ5r9+t6e+WVnp1pxnNIjgBe4/6dAysQc8dsmHwPcW9C0h3fW1hans1ltwJhy0GxK7XZbUlMp5Ww2eyan6+ft/f2FAqXGK4CvQk5HueFz7D6GOZtIrK+srupdx1GRBBqNBtzc2AiMr7nPplRdKhb1q6q6zjFhrklEFOUutoQ50xcX86ZlqaZpQrfbBdu2R6/G19zX6XSgh6RX5ubyHCM8nqSID6ICrGiZjGYYxojEsiw4PDwMSL5VKsC8Yf4VRYFzMzMaxwjlJSlCyAQ9l0CW44PBADzXhe7xMdi9HtTrdYjFYkDQL0cn4Xdq2/EAE+InCnvADTf2eah4Sx9vExQjkqXT6aAERICMewd/UAp/IeYANM2joxt+q5VI+ieq2i0Wg3l6DNzHwTERPgo1ko7XBXj3vdlsT2F+UuhIhYkp7u7CarkcrFOCtR3H5JiwbAIeImjT/YQKKBtGjRFCU5IUgFRe7fF4cCNVIPMYo3VKqxwjyNAXNepuopyqnld602qVsfRpEkkz+GFL1wPj6ySXBpJtWVa5xlhpcyhBNwpZHmtX8AGgfIExo0ZpzkWVTBGiXCSEaHh62/PoR0p/vHaczxXGnj4bSo+G78lELU80h1uogBwWLf5YlsPmgDEd4M236xjm+8nm4IuE/9u+/PH2JXZfbwz4zw1WbO+SQPpXfwG/BBgAhCNZiSb/pOQAAAAASUVORK5CYII=);
+}
+.notifyjs-bootstrap-success {
+    color: #468847;
+    background-color: #DFF0D8;
+    border-color: #D6E9C6;
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAutJREFUeNq0lctPE0Ecx38zu/RFS1EryqtgJFA08YCiMZIAQQ4eRG8eDGdPJiYeTIwHTfwPiAcvXIwXLwoXPaDxkWgQ6islKlJLSQWLUraPLTv7Gme32zoF9KSTfLO7v53vZ3d/M7/fIth+IO6INt2jjoA7bjHCJoAlzCRw59YwHYjBnfMPqAKWQYKjGkfCJqAF0xwZjipQtA3MxeSG87VhOOYegVrUCy7UZM9S6TLIdAamySTclZdYhFhRHloGYg7mgZv1Zzztvgud7V1tbQ2twYA34LJmF4p5dXF1KTufnE+SxeJtuCZNsLDCQU0+RyKTF27Unw101l8e6hns3u0PBalORVVVkcaEKBJDgV3+cGM4tKKmI+ohlIGnygKX00rSBfszz/n2uXv81wd6+rt1orsZCHRdr1Imk2F2Kob3hutSxW8thsd8AXNaln9D7CTfA6O+0UgkMuwVvEFFUbbAcrkcTA8+AtOk8E6KiQiDmMFSDqZItAzEVQviRkdDdaFgPp8HSZKAEAL5Qh7Sq2lIJBJwv2scUqkUnKoZgNhcDKhKg5aH+1IkcouCAdFGAQsuWZYhOjwFHQ96oagWgRoUov1T9kRBEODAwxM2QtEUl+Wp+Ln9VRo6BcMw4ErHRYjH4/B26AlQoQQTRdHWwcd9AH57+UAXddvDD37DmrBBV34WfqiXPl61g+vr6xA9zsGeM9gOdsNXkgpEtTwVvwOklXLKm6+/p5ezwk4B+j6droBs2CsGa/gNs6RIxazl4Tc25mpTgw/apPR1LYlNRFAzgsOxkyXYLIM1V8NMwyAkJSctD1eGVKiq5wWjSPdjmeTkiKvVW4f2YPHWl3GAVq6ymcyCTgovM3FzyRiDe2TaKcEKsLpJvNHjZgPNqEtyi6mZIm4SRFyLMUsONSSdkPeFtY1n0mczoY3BHTLhwPRy9/lzcziCw9ACI+yql0VLzcGAZbYSM5CCSZg1/9oc/nn7+i8N9p/8An4JMADxhH+xHfuiKwAAAABJRU5ErkJggg==);
+}
+.notifyjs-bootstrap-info {
+    color: #3A87AD;
+    background-color: #D9EDF7;
+    border-color: #BCE8F1;
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3QYFAhkSsdes/QAAA8dJREFUOMvVlGtMW2UYx//POaWHXg6lLaW0ypAtw1UCgbniNOLcVOLmAjHZolOYlxmTGXVZdAnRfXQm+7SoU4mXaOaiZsEpC9FkiQs6Z6bdCnNYruM6KNBw6YWewzl9z+sHImEWv+vz7XmT95f/+3/+7wP814v+efDOV3/SoX3lHAA+6ODeUFfMfjOWMADgdk+eEKz0pF7aQdMAcOKLLjrcVMVX3xdWN29/GhYP7SvnP0cWfS8caSkfHZsPE9Fgnt02JNutQ0QYHB2dDz9/pKX8QjjuO9xUxd/66HdxTeCHZ3rojQObGQBcuNjfplkD3b19Y/6MrimSaKgSMmpGU5WevmE/swa6Oy73tQHA0Rdr2Mmv/6A1n9w9suQ7097Z9lM4FlTgTDrzZTu4StXVfpiI48rVcUDM5cmEksrFnHxfpTtU/3BFQzCQF/2bYVoNbH7zmItbSoMj40JSzmMyX5qDvriA7QdrIIpA+3cdsMpu0nXI8cV0MtKXCPZev+gCEM1S2NHPvWfP/hL+7FSr3+0p5RBEyhEN5JCKYr8XnASMT0xBNyzQGQeI8fjsGD39RMPk7se2bd5ZtTyoFYXftF6y37gx7NeUtJJOTFlAHDZLDuILU3j3+H5oOrD3yWbIztugaAzgnBKJuBLpGfQrS8wO4FZgV+c1IxaLgWVU0tMLEETCos4xMzEIv9cJXQcyagIwigDGwJgOAtHAwAhisQUjy0ORGERiELgG4iakkzo4MYAxcM5hAMi1WWG1yYCJIcMUaBkVRLdGeSU2995TLWzcUAzONJ7J6FBVBYIggMzmFbvdBV44Corg8vjhzC+EJEl8U1kJtgYrhCzgc/vvTwXKSib1paRFVRVORDAJAsw5FuTaJEhWM2SHB3mOAlhkNxwuLzeJsGwqWzf5TFNdKgtY5qHp6ZFf67Y/sAVadCaVY5YACDDb3Oi4NIjLnWMw2QthCBIsVhsUTU9tvXsjeq9+X1d75/KEs4LNOfcdf/+HthMnvwxOD0wmHaXr7ZItn2wuH2SnBzbZAbPJwpPx+VQuzcm7dgRCB57a1uBzUDRL4bfnI0RE0eaXd9W89mpjqHZnUI5Hh2l2dkZZUhOqpi2qSmpOmZ64Tuu9qlz/SEXo6MEHa3wOip46F1n7633eekV8ds8Wxjn37Wl63VVa+ej5oeEZ/82ZBETJjpJ1Rbij2D3Z/1trXUvLsblCK0XfOx0SX2kMsn9dX+d+7Kf6h8o4AIykuffjT8L20LU+w4AZd5VvEPY+XpWqLV327HR7DzXuDnD8r+ovkBehJ8i+y8YAAAAASUVORK5CYII=);
+}
+.notifyjs-bootstrap-warn {
+    color: #C09853;
+    background-color: #FCF8E3;
+    border-color: #FBEED5;
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAMAAAC6V+0/AAABJlBMVEXr6eb/2oD/wi7/xjr/0mP/ykf/tQD/vBj/3o7/uQ//vyL/twebhgD/4pzX1K3z8e349vK6tHCilCWbiQymn0jGworr6dXQza3HxcKkn1vWvV/5uRfk4dXZ1bD18+/52YebiAmyr5S9mhCzrWq5t6ufjRH54aLs0oS+qD751XqPhAybhwXsujG3sm+Zk0PTwG6Shg+PhhObhwOPgQL4zV2nlyrf27uLfgCPhRHu7OmLgAafkyiWkD3l49ibiAfTs0C+lgCniwD4sgDJxqOilzDWowWFfAH08uebig6qpFHBvH/aw26FfQTQzsvy8OyEfz20r3jAvaKbhgG9q0nc2LbZxXanoUu/u5WSggCtp1anpJKdmFz/zlX/1nGJiYmuq5Dx7+sAAADoPUZSAAAAAXRSTlMAQObYZgAAAAFiS0dEAIgFHUgAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfdBgUBGhh4aah5AAAAlklEQVQY02NgoBIIE8EUcwn1FkIXM1Tj5dDUQhPU502Mi7XXQxGz5uVIjGOJUUUW81HnYEyMi2HVcUOICQZzMMYmxrEyMylJwgUt5BljWRLjmJm4pI1hYp5SQLGYxDgmLnZOVxuooClIDKgXKMbN5ggV1ACLJcaBxNgcoiGCBiZwdWxOETBDrTyEFey0jYJ4eHjMGWgEAIpRFRCUt08qAAAAAElFTkSuQmCC);
+}
+</style><style type="text/css" id="notify-default">.notifyjs-default-base {
+    padding: 8px 15px;
+    font-size: 1.1em;
+    color: #3A87AD;
+    background-color: #D9EDF7;
+    border: 1px solid #BCE8F1;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+</style><style type="text/css" id="notify-success">.notifyjs-success-base {
+    padding: 8px 15px;
+    font-size: 1.1em;
+    color: #468847;
+    background-color: #DFF0D8;
+    border: 1px solid #D6E9C6;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+</style><style type="text/css" id="notify-info">.notifyjs-info-base {
+    padding: 8px 15px;
+    font-size: 1.1em;
+    color: #3A87AD;
+    background-color: #D9EDF7;
+    border: 1px solid #BCE8F1;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+</style><style type="text/css" id="notify-warning">.notifyjs-warning-base {
+    padding: 8px 15px;
+    font-size: 1.1em;
+    color: #C09853;
+    background-color: #FCF8E3;
+    border: 1px solid #FBEED5;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+</style><style type="text/css" id="notify-error">.notifyjs-error-base {
+    padding: 8px 15px;
+    font-size: 1.1em;
+    color: #B94A48;
+    background-color: #F2DEDE;
+    border: 1px solid #EED3D7;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+</style><style type="text/css" id="core-notify">.notifyjs-corner {
+    position: fixed;
+    margin: 5px;
+    z-index: 1050;
+}
+
+.notifyjs-corner .notifyjs-wrapper,
+.notifyjs-corner .notifyjs-container {
+    position: relative;
+    display: block;
+    height: inherit;
+    width: inherit;
+    margin: 3px;
+}
+
+.notifyjs-wrapper {
+    z-index: 1;
+    position: absolute;
+    display: inline-block;
+    height: 0;
+    width: 0;
+}
+
+.notifyjs-container {
+    display: none;
+    z-index: 1;
+    position: absolute;
+}
+
+.notifyjs-hidable {
+    cursor: pointer;
+}
+
+[data-notify-text],[data-notify-html] {
+    position: relative;
+}
+
+.notifyjs-arrow {
+    position: absolute;
+    z-index: 2;
+    width: 0;
+    height: 0;
+}</style></head>
+<body class=""><div id="nistheadergoeshere"></div>
+    
+    <div id="page-wrapper"><div id="titleBar"><a href="#navPanel" class="toggle"><i class="fas fa-bars ml-2"></i></a><span class="title">
+                        Materials Data Curation System
+                    </span></div>
+        
+        
+
+
+<nav id="nav">
+        <ul>
+            <!-- Start MDCS title left -->
+            <li id="cdcs-main" style="padding: 0px; white-space: nowrap;">
+                <div id="cdcs-menu-title">
+                    <a href="https://cdcs.nist.gov/" title="Configurable Data Curation System (CDCS)">
+                        Materials Data Curation System
+                    </a>
+                </div>
+            </li>
+            <!-- End MDCS title left -->
+
+            <!-- Start float left menu-->
+            
+            
+            
+            <li style="white-space: nowrap;">
+                <a href="/"><i class="fas fa-home"></i> Home</a>
+            </li>
+            
+            <li style="white-space: nowrap;">
+                <a href="/curate/"> Data Curation</a>
+            </li>
+            
+            <li class="nested opener" style="user-select: none; cursor: pointer; white-space: nowrap;">
+                <a href="#">
+                    Data Exploration <i class="fas fa-caret-down"></i></a>
+                
+                
+            <ul class="" style="user-select: none; display: none; position: absolute;">
+                    
+                    
+                        <li style="white-space: nowrap;"><a href="/explore/keyword/" class="cdcs-menu-item" style="display: block;"> Search by Keyword</a></li>
+                    
+                        <li style="white-space: nowrap;"><a href="/explore/example/" class="cdcs-menu-item" style="display: block;"> Build a Custom Query</a></li>
+                    
+                </ul></li>
+            <li class="nested opener" style="user-select: none; cursor: pointer; white-space: nowrap;">
+                <a href="#">
+                    Composer <i class="fas fa-caret-down"></i>
+                </a>
+                
+            <ul class="" style="user-select: none; display: none; position: absolute;">
+                    
+                    
+                        <li style="white-space: nowrap;"><a href="/composer/" class="cdcs-menu-item" style="display: block;"> Create New Template</a></li>
+                    
+                        
+                    
+                        
+                    
+                </ul></li>
+            
+            <!-- End float right menu-->
+
+            <!-- Start float right menu-->
+            <li class="nested float-right" style="white-space: nowrap;">
+                
+                    <a href="/login">
+                        <i class="fas fa-sign-in-alt"></i> Log In / Sign Up
+                    </a>
+                
+            </li>
+            <li class="nested float-right opener" style="user-select: none; cursor: pointer; white-space: nowrap;">
+                <a href="#">
+                    Help <i class="fas fa-caret-down"></i>
+                </a>
+                
+            <ul class="" style="user-select: none; display: none; position: absolute;">
+                    
+                    
+                        <li style="white-space: nowrap;"><a href="/docs/api" class="cdcs-menu-item" style="display: block;"><i class="fas fa-cogs"></i> API Documentation</a></li>
+                    
+                        <li style="white-space: nowrap;"><a href="/contact/" class="cdcs-menu-item" style="display: block;"><i class="fas fa-envelope"></i> Contact</a></li>
+                    
+                        <li style="white-space: nowrap;"><a href="/help/" class="cdcs-menu-item" style="display: block;"><i class="fas fa-question-circle"></i> Help</a></li>
+                    
+                </ul></li>
+            <!-- End float right menu-->
+
+        </ul>
+</nav>
+
+
+        <div id="content" class="container-fluid">
+            
+    
+<div class="row">
+    <div class="column">
+        <div class="wrapper">
+      <div class="fixed one"></div>
+      <div class="scroll">
+        <h3>
+         Web Force-Field
+        </h3>
+      </div>
+      <div class="fixed two"></div>
+      <div class="scroll">
+        <p>
+         WebFF is an open and extensible molecular dynamics force-field (FF) repository, designed to support the Materials Genome Initiative (MGI) for organic and related soft materials. The repository is built using the NIST Materials Data Curation System (MDCS) [link] which supports ontology based database descriptions using XML schema.
+        </p>
+      </div>
+      <div class="fixed three"></div>
+    </div>
+        </div></div>
+<div class="row">
+    <div class="column">
+        <p>'
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    '</p>
+        </div><div class="column">
+        <p>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+
+
+
+
+
+
+
+
+
+
+</p>
+        </div><div class="column">
+        <p>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+
+
+
+
+
+
+
+
+
+
+</p>
+        </div><div class="column">
+        <p>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+
+
+
+
+
+
+
+
+
+
+</p>
+        </div></div><div class="row justify-content-center">
+    <div class="col-md-5" id="tiles"><h2 id="available-options">Available Options</h2>
+
+<div class="tile">
+    <div class="icon">
+        <i class="fas fa-edit"></i>
+    </div>
+    <div class="text">
+        <h3><a href="/curate/">Curate your Materials Data</a></h3>
+        <p>
+            Click here to select a form template and then fill out the corresponding form.
+        </p>
+    </div>
+</div>
+
+<div class="tile">
+    <div class="icon">
+        <i class="fas fa-flask"></i>
+    </div>
+    <div class="text">
+        <h3><a href="/explore/example/">Build your own queries</a></h3>
+        <p>
+            Click here to search for Materials Data in the repository using flexible queries.
+        </p>
+    </div>
+</div>
+
+<div class="tile">
+    <div class="icon">
+        <i class="fas fa-search"></i>
+    </div>
+    <div class="text">
+        <h3><a href="/explore/keyword/">Search by keyword</a></h3>
+        <p>
+            Click here to explore for Materials Data in the repository using keywords.
+        </p>
+    </div>
+</div>
+
+<div class="tile">
+    <div class="icon">
+        <i class="fas fa-file-code"></i>
+    </div>
+    <div class="text">
+        <h3><a href="/composer/">Compose a template</a></h3>
+        <p>
+            Click here to compose your own template.
+        </p>
+    </div>
+</div>
+</div>
+    <div class="col-md-5" id="templates"><h2>
+    Recently used templates
+</h2>
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>Template Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        
+    </tbody>
+</table></div>
+</div>
+
+
+        </div>
+
+        
+
+<div id="footer">
+    <div class="d-flex">
+        <div class="mr-auto">
+            CDCS Version 2.20.0
+
+        </div>
+        <div id="footer-right" class="d-flex">
+            
+
+
+    
+    <ul class="menu">
+        
+            <li>
+                <a class="small" href="/terms/">Terms of use</a>
+            </li>
+        
+    </ul>
+
+            <span>
+                Powered by:
+                <img src="/static/img/cdcs_logo.png" alt="cdcs-logo" class="cdcs-logo">
+                <a href="https://github.com/usnistgov/mdcs">CDCS</a>
+            </span>
+        </div>
+    </div>
+
+</div>
+
+    </div>
+
+    
+    
+
+
+    
+        <script src="/static/core_main_app/libs/jquery/3.5.1/jquery.js"></script>
+        <script src="/static/core_main_app/libs/jquery-ui/1.12.1/jquery-ui.js"></script>
+        <script src="/static/core_main_app/libs/popper-js/popper.min.js"></script>
+        <script src="/static/core_main_app/libs/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <script src="/static/core_main_app/common/js/csrf.js"></script>
+        <script src="/static/core_main_app/common/js/leave_notice.js"></script>
+        <script src="/static/core_main_app/common/js/loading_spinner.js"></script>
+        
+        <script src="https://pages.nist.gov/nist-header-footer/js/nist-header-footer.js" type="text/javascript" defer="defer"></script>
+        
+        
+
+<script src="/static/core_main_app/libs/notify.js"></script>
+<script src="/static/core_main_app/common/js/notify-styles.js"></script>
+
+
+    
+    
+
+    <script src="/static/libs/skel/3.0.1/skel-3.0.1.js"></script>
+    <script src="/static/libs/jquery.dropotron/1.4.3/jquery.dropotron-1.4.3.js"></script>
+    <script src="/static/js/util.js"></script>
+    <!--[if lte IE 8]><script src="/static/ie/respond.min.js"></script><![endif]-->
+    <script src="/static/js/main.js"></script>
+    <script src="/static/js/btn_custom.js"></script>
+    <script src="/static/core_main_app/common/js/debounce.js"></script>
+    <script src="/static/js/dropdown.js"></script><ul class="dropotron level-0" style="user-select: none; display: none; position: absolute; z-index: 1000;">
+                    
+                    
+                        <li style="white-space: nowrap;"><a href="/explore/keyword/" class="cdcs-menu-item" style="display: block;"> Search by Keyword</a></li>
+                    
+                        <li style="white-space: nowrap;"><a href="/explore/example/" class="cdcs-menu-item" style="display: block;"> Build a Custom Query</a></li>
+                    
+                </ul><ul class="dropotron level-0" style="user-select: none; display: none; position: absolute; z-index: 1000;">
+                    
+                    
+                        <li style="white-space: nowrap;"><a href="/composer/" class="cdcs-menu-item" style="display: block;"> Create New Template</a></li>
+                    
+                        
+                    
+                        
+                    
+                </ul><ul class="dropotron level-0" style="user-select: none; display: none; position: absolute; z-index: 1000;">
+                    
+                    
+                        <li style="white-space: nowrap;"><a href="/docs/api" class="cdcs-menu-item" style="display: block;"><i class="fas fa-cogs"></i> API Documentation</a></li>
+                    
+                        <li style="white-space: nowrap;"><a href="/contact/" class="cdcs-menu-item" style="display: block;"><i class="fas fa-envelope"></i> Contact</a></li>
+                    
+                        <li style="white-space: nowrap;"><a href="/help/" class="cdcs-menu-item" style="display: block;"><i class="fas fa-question-circle"></i> Help</a></li>
+                    
+                </ul>
+
+    
+    
+    
+        
+            <script type="text/javascript">var tilesGetUrl = "/home/tiles";
+var templatesGetUrl = "/home/templates";</script>
+        
+    
+        
+            <script src="/static/core_main_app/js/homepage.js"></script>
+        
+    
+
+
+    <!--
+    From the documentation:
+        Add the detection template tag to your site, ideally in your base layout just before the </body> tag
+    -->
+    
+
+
+
+<div id="navPanel"><nav><a class="link depth-0" href="https://cdcs.nist.gov/" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"><span class="indent-0"></span>
+                        Materials Data Curation System
+                    </a><a class="link depth-0" href="/" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"><span class="indent-0"></span> Home</a><a class="link depth-0" href="/curate/" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"><span class="indent-0"></span> Data Curation</a><a class="link depth-0" href="#" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"><span class="indent-0"></span>
+                    Data Exploration </a><a class="link depth-1" href="/explore/keyword/" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"><span class="indent-1"></span> Search by Keyword</a><a class="link depth-1" href="/explore/example/" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"><span class="indent-1"></span> Build a Custom Query</a><a class="link depth-0" href="#" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"><span class="indent-0"></span>
+                    Composer 
+                </a><a class="link depth-1" href="/composer/" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"><span class="indent-1"></span> Create New Template</a><a class="link depth-0" href="/login" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"><span class="indent-0"></span>
+                         Log In / Sign Up
+                    </a><a class="link depth-0" href="#" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"><span class="indent-0"></span>
+                    Help 
+                </a><a class="link depth-1" href="/docs/api" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"><span class="indent-1"></span> API Documentation</a><a class="link depth-1" href="/contact/" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"><span class="indent-1"></span> Contact</a><a class="link depth-1" href="/help/" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"><span class="indent-1"></span> Help</a></nav></div><div id="nistfootergoeshere"></div></body></html>
